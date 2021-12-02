@@ -1,0 +1,40 @@
+MDP File:
+Recall that every MDP has four parts: a set of states 𝑆, a set of actions 𝐴, a state transition function 𝑇(𝑠!, 𝑎, 𝑠!"#) = 𝑃(𝑠!"#|𝑠!, 𝑎), and a reward function 𝑅(𝑠!, 𝑎, 𝑠!"#). The MDP file format encodes these details as follows:
+
+• Under the States heading is a list of all states in the environment, one state per line. Each state is recorded in the format:
+                               UniqueID,Label
+    where UniqueID is a unique number identifier for each state (ranging from 0-2303) and Label is a textual description of the state, here the values of each of the individual state variables (x, y, F0, F1, F2, F3) [described at the end of this document]. For purposes of this assignment, Label is only included to help you debug; otherwise, you will always refer to a state by its UniqueID.
+
+• Under the Actions heading is a list of all actions that the agent can take in the environment, one action per line. Similar to states, each action is recorded in the format:
+                               UniqueID,Label
+    where UniqueID is a unique number identifier for each action (ranging from 0-4) and Label is a textual description of the action (“Extinguish”, “Up”, “Down”, “Left”, “Right”). As with states, the Label is only there to help you debug; otherwise, you will always refer to an action by its UniqueID.
+
+• Under the State Transitions heading is a list of all state transitions that do not have 0% probability. Each state transition is recorded in the format:
+state,action,next_state,probability
+
+    where state represents the unique identifier of the current state 𝑠! , action represents the unique identifier of the chosen action 𝑎, next_state represents the unique identifier of the next state 𝑠!"#, and probability represents the transition probability.
+
+Of note: any state transition 𝑇(𝑠!, 𝑎, 𝑠!"#) not listed in the MDP file has 0% probability.
+
+• Under the Rewards heading is a list of all reward combinations that do not have 0 value.
+  Each reward is recorded in the format:
+
+                    state,action,next_state,reward
+
+    where state represents the unique identifier of the current state 𝑠! , action represents the unique identifier of the chosen action 𝑎, next_state represents the unique identifier of the next state 𝑠!"#, and probability represents the transition probability.
+
+    Of note: any reward 𝑅(𝑠!, 𝑎, 𝑠!"#) not listed in the MDP file has 0 value.
+
+Programming Assignment:
+
+1. Parses a MDP file according to the above format into states, actions, state transitions, and rewards
+2. Performs the Value Iteration algorithm to create the appropriate Q and V tables, then determines an appropriate policy from the resulting Q table. You should use 𝝐 = 𝟎. 𝟏 in Value Iteration, whereas 𝛾 will be specified by the user (see below).
+3. Saves the policy to a file so that it can later be used in a simulation of the environment.
+
+Your program should save the policy to a file in the following format. Each line should represent a single state and the prescribed action for that state. The first value in a line is the state’s unique identifier, followed by a comma, followed by the action’s unique identifier. Since there are 2304 states in this problem, your policy file should have 2304 lines.
+
+System Call:
+
+python3 mdp_planner.py <mdpFilename> <gammaValue> <policyFilename>
+
+    where <mdpFilename> is the path to the MDP file, <gammaValue> is a value to use for 𝛾 in the Value Iteration algorithm, and <mdpFilename> is the name of the file where your policy will be saved.

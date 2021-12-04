@@ -1,4 +1,5 @@
 MDP File:
+
 Recall that every MDP has four parts: a set of states 𝑆, a set of actions 𝐴, a state transition function 𝑇(𝑠!, 𝑎, 𝑠!"#) = 𝑃(𝑠!"#|𝑠!, 𝑎), and a reward function 𝑅(𝑠!, 𝑎, 𝑠!"#). The MDP file format encodes these details as follows:
 
 • Under the States heading is a list of all states in the environment, one state per line. Each state is recorded in the format:
@@ -24,6 +25,8 @@ Of note: any state transition 𝑇(𝑠!, 𝑎, 𝑠!"#) not listed in the MDP f
     where state represents the unique identifier of the current state 𝑠! , action represents the unique identifier of the chosen action 𝑎, next_state represents the unique identifier of the next state 𝑠!"#, and probability represents the transition probability.
 
     Of note: any reward 𝑅(𝑠!, 𝑎, 𝑠!"#) not listed in the MDP file has 0 value.
+
+
 
 Programming Assignment:
 

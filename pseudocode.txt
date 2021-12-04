@@ -141,3 +141,81 @@ Development Plan:
             ❖ What is the likely next state to occur?
             ❖ What is the probability of a sequence of states?
             ❖ Given two or more chains, which one most likely produced a given sequence of states?
+
+    Markov Decision Process
+    ❖ When the agent influences state transitions, we have aMarkov Decision Process   MDP = <S, A, T, R>
+        ❖ States of the environment S = {s}
+        ❖ Actions the agent can choose A = {a}
+        ❖ Stochastic state transition function
+            ❖ T(st, a, st+1) = P(st+1| st, a) = probability state goes from st to st+1 after agent takes action a
+            ❖ Reward function
+                ❖ R(st, a, st+1) = reward for taking action a in state stand reaching state st+1
+                ❖ Often the next state doesn’t change the reward, so we have R(st, a)
+
+    Wildfire Suppression Model
+        ❖ States: factored combination of fire and suppressant levels
+            ❖ Fire Variables: model environment as a grid/graph of locations, each with a different fire level
+                ❖ 0 = no fire
+                ❖ 1, 2, ..., k-1 = different levels of fire intensity
+                ❖ k = burned out
+            ❖ Suppressant Variable: how much suppressant resource does the agent have?
+                ❖ Fighting fires expends suppressant, and the agent needs to recharge when it runs out
+
+        ❖ Actions: what can the agent do to put out fires?
+            ❖ If the agent has suppressant, choose a nearby fire to fight
+                ❖ Can pick from any location within range of the agent
+            ❖ If the agent has no suppressant: leave the fires and recharge
+            ❖ If there are no fires: wait until needed
+
+        ❖ State Transitions: stochastic changes to fires and suppressant
+            ❖ Fire Variables: fire intensity levels naturally increase over time (based on Boychuk et al., 2009)
+                ❖ If not on fire, probability of catching fire depends increases with number of neighboring locations on fire (factoring in wind, vegetation, etc.)
+                ❖ If on fire, intensity either stays the same or increases one level
+                ❖ Unless an agent fights a fire, then the intensity decreases
+            ❖ Suppressant Variable: suppressant decreases with each use or increases with recharging
+
+        ❖ Rewards: signal to the agent about the quality of actions in different states
+            ❖ Our model: +1 for each location not on fire
+                ❖ Encourages the agent to put out fires as fast as possible
+        ❖ Agent’sGoal: choose actions that give the greatest cumulative reward over time
+            ❖ Protect from fires spreading and burning all the vegetation in neighboring areas
+
+    #### Read to define policy that we will use in the program ####
+    ❖ Solving a MDP creates a plan of actions for the agent
+        ❖ Called a policy π: S→A
+            ❖ Determines which action a = π(s) that the agent should take in a given state s
+        ❖ Can also have a stochastic policy π: S × A→ [0,1]
+            ❖ Determines the likelihood P(a | s) = π(s, a) that the agent should choose action a in a given state s
+    ❖ Optimal policy: one that maximizes the utility of the agent
+        ❖ Wildfire suppression: tells the agent which fires to fight and when to recharge its suppressant
+        ❖ Game show: tells the agent whether to keep playing or quit
+
+    From Rewards to Utilities
+        ❖ Want utility function U(s) to balance immediate and long-term benefits to the agent
+            ❖ Cumulative rewards:
+                - Uπ(s0)=R(s0,π(s0),s1)+R(s1,π(s1),s2)+R(s2,π(s2),s3)+...=∞∑t=0 R(st,π(st),st+1)
+
+            ❖ Discounted cumulative rewards:
+                - Uπ(s0)=R(s0,π(s0),s1)+γR(s1,π(s1),s2)+γ2R(s2,π(s2),s3)+...=∞∑t=0 γ^t R(st,π(st),st+1)
+              where γ is a discount factor in the range (0, 1)
+
+              Reference slides for the information about the equations
+
+    Bellman Equation
+        ❖ At the core of planning is calculating expected utility V(s) for each state s from the reward function R
+        Q(st,a)=∑st+1∈ST(st,a,st+1)[R(st,a,st+1)+γ*V(st+1)]
+
+        #### Reference slides for the information about the equations ####
+
+        ❖ Do this for every state s and action a (repeatedly until converge)
+
+        Reference the next slides for the situation where the reward does not depend on next state:
+
+
+Planning with MDPs
+    ❖ Many different algorithms for calculating π(s).  Two general approaches:
+        ❖ Offline planning: calculate π(s) for all possible states s in advance before the agent executes the plan in the environment
+        ❖ Online planning: calculate π(s) for current state s, then execute, then plan again, execute new plan, repeat.
+
+Question:
+    - Ask about the reward equations

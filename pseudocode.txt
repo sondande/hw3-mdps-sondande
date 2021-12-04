@@ -26,11 +26,28 @@ Of note: any state transition 𝑇(𝑠!, 𝑎, 𝑠!"#) not listed in the MDP f
 
     Of note: any reward 𝑅(𝑠!, 𝑎, 𝑠!"#) not listed in the MDP file has 0 value.
 
-
+Data Structures:
+    - State Dictionary from UniqueID to Label
+    - Action Dictionary from UniqueID to Label
+    - State Transitions Dictionary with 4 layers-- State, action, next_state, probability
+    - Reward Transition Dictionary with 4 layers-- State, action, next_state, reward
 
 Programming Assignment:
 
 1. Parses a MDP file according to the above format into states, actions, state transitions, and rewards
+
+Create state, action, state transitions, reward transitions dictionaries
+Parse through the file:
+    At state header:
+        iterate through placing id's and labels into Dictionary
+    At Actions header:
+        iterate through placing id's and labels into Dictionary
+    At State Transitions header: 
+        iterate through placing State, action, next_state, probability
+    At Rewards:
+        iterate through placing State, action, next_state, reward
+
+
 2. Performs the Value Iteration algorithm to create the appropriate Q and V tables, then determines an appropriate policy from the resulting Q table. You should use 𝝐 = 𝟎. 𝟏 in Value Iteration, whereas 𝛾 will be specified by the user (see below).
 3. Saves the policy to a file so that it can later be used in a simulation of the environment.
 

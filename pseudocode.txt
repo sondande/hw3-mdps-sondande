@@ -217,5 +217,66 @@ Planning with MDPs
         ❖ Offline planning: calculate π(s) for all possible states s in advance before the agent executes the plan in the environment
         ❖ Online planning: calculate π(s) for current state s, then execute, then plan again, execute new plan, repeat.
 
+
+Applying Offline Planning:
+# To allow us to evaluate the information before we execute it.
+# Prepare all the information, confirm it is correct (if possible), the execute it.
+    # - Good for debugging as check in points
+
+    Planning (Calculate Utilities, Pick Best Action):
+        - Calculate Utilities
+            - Function purpose:
+            - Parameters to take in:
+            - Where is this function used:
+            - What do we need to calculate this in a:
+                - Stochastic environment:
+                    -
+                - Non-episodic:
+                    -
+            - What do we want to return?
+                - What type is our result?
+                    - Object?
+                    - Variable (string, int, boolean, etc.)
+
+        - Pick Best Action
+            - Function purpose:
+            - Parameters to take in:
+            - Where is this function used:
+            - What do we need to calculate this in a:
+                - Stochastic environment:
+                    -
+                - Non-episodic:
+                    -
+            - What do we want to return?
+                - What type is our result?
+                    - Object?
+                    - Variable (string, int, boolean, etc.)
+
+    Execute Plan:
+        - How can we do this?
+            -
+            ####
+            - Function purpose:
+                - Parameters to take in:
+                - Where is this function used:
+                - What do we need to calculate this in a:
+                    - Stochastic environment:
+                        -
+                    - Non-episodic:
+                        -
+                - What do we want to return?
+                    - What type is our result?
+                        - Object?
+                        - Variable (string, int, boolean, etc.)
+                        
+            ####
+            - In the case of recursion:
+                - What result are we looking for?
+                    - What is our base case?
+                        -
+                    - What is our recursive case?
+                        -
+
+
 Question:
     - Ask about the reward equations

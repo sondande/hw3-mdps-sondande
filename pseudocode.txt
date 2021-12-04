@@ -13,7 +13,10 @@ Recall that every MDP has four parts: a set of states 𝑆, a set of actions �
 • Under the State Transitions heading is a list of all state transitions that do not have 0% probability. Each state transition is recorded in the format:
 state,action,next_state,probability
 
-    where state represents the unique identifier of the current state 𝑠! , action represents the unique identifier of the chosen action 𝑎, next_state represents the unique identifier of the next state 𝑠!"#, and probability represents the transition probability.
+    where state represents the unique identifier of the current state 𝑠! ,
+    action represents the unique identifier of the chosen action 𝑎,
+    next_state represents the unique identifier of the next state 𝑠!"#,
+    and probability represents the transition probability.
 
 Of note: any state transition 𝑇(𝑠!, 𝑎, 𝑠!"#) not listed in the MDP file has 0% probability.
 
@@ -22,22 +25,99 @@ Of note: any state transition 𝑇(𝑠!, 𝑎, 𝑠!"#) not listed in the MDP f
 
                     state,action,next_state,reward
 
-    where state represents the unique identifier of the current state 𝑠! , action represents the unique identifier of the chosen action 𝑎, next_state represents the unique identifier of the next state 𝑠!"#, and probability represents the transition probability.
+    where state represents the unique identifier of the current state 𝑠! ,
+    action represents the unique identifier of the chosen action 𝑎,
+    next_state represents the unique identifier of the next state 𝑠!"#,
+    and probability represents the transition probability.
+
 
     Of note: any reward 𝑅(𝑠!, 𝑎, 𝑠!"#) not listed in the MDP file has 0 value.
-
 
 
 Programming Assignment:
 
 1. Parses a MDP file according to the above format into states, actions, state transitions, and rewards
-2. Performs the Value Iteration algorithm to create the appropriate Q and V tables, then determines an appropriate policy from the resulting Q table. You should use 𝝐 = 𝟎. 𝟏 in Value Iteration, whereas 𝛾 will be specified by the user (see below).
+2. Performs the Value Iteration algorithm to create the appropriate Q and V tables, then determines an appropriate policy from the resulting Q table.
+   You should use 𝝐 = 𝟎. 𝟏 in Value Iteration, whereas 𝛾 will be specified by the user (see below).
 3. Saves the policy to a file so that it can later be used in a simulation of the environment.
 
-Your program should save the policy to a file in the following format. Each line should represent a single state and the prescribed action for that state. The first value in a line is the state’s unique identifier, followed by a comma, followed by the action’s unique identifier. Since there are 2304 states in this problem, your policy file should have 2304 lines.
+Your program should save the policy to a file in the following format. Each line should represent a single state and the prescribed action for that state.
+The first value in a line is the state’s unique identifier, followed by a comma, followed by the action’s unique identifier. Since there are 2304 states in this problem, your policy file should have 2304 lines.
 
 System Call:
 
 python3 mdp_planner.py <mdpFilename> <gammaValue> <policyFilename>
 
     where <mdpFilename> is the path to the MDP file, <gammaValue> is a value to use for 𝛾 in the Value Iteration algorithm, and <mdpFilename> is the name of the file where your policy will be saved.
+
+###################################################################################################################################################
+
+Definition:
+    - Stochastic:
+        - actions can result in multiple possible next states, each with different probabilities
+    - Non-episodic:
+        - the environment might not have a fixed goal or end to a task
+    - Rewards vs. costs:
+        - agents might also receive positive rewards for taking certain actions in certain states
+
+Development Plan:
+
+    Stochastic Situation:
+        ❖ Consider the Wildfire Suppression Problem
+            ❖ Stochastic changes to the environment:
+                ❖ New fires randomly appear (e.g., lightning strike)
+                ❖ Wind changes speed/direction causes shift in fire movement
+                ❖ Takeaway: cannot always accurately predict how environment will change over time
+                    ❖ Including what will happen when a robot acts
+
+
+        ❖ Let’s first look at how to model stochastic environments
+            ❖ What are probabilities?
+            ❖ What influences the probabilities ?
+                1. Environment changes randomly, independent of the agent
+                2 .Agent’s actions influence the environment changes
+
+
+    Notes to look up: going into how we can implement the probability theory to be more accurate
+        Implement Conditional probabilities??
+            Definition:
+                - Conditional probabilities:
+                    - P(B | A) = probability of event B given that event A already happened
+
+                    Examples:
+                        ❖ Vaccines: P(infected | vaccinated) = 0.01
+                        ❖ Sports: P(win | score  50) = 0.9
+
+                    #### Note on Conditional Probability: ####
+                    ❖ Given some event A, sum of all other events is still equal to 1
+                    ❖ P(win | score  50) + P(lose | score  50) = 1
+                        “After A, something else has to also happen”
+                            ❖ ∑ P(B|A) = 1
+
+        Law of total probability: P(B)=∑AP(B|A)P(A)
+            ❖ P(win) = P(win | score  50) * P(score  50) + P(win | score < 50) * P(score < 50)
+            ❖ The probability of a later event depends on all the things that could have happened earlier
+
+        ❖ P(A, B) = joint probability of event A andB
+            ❖ If events are independent: P(A, B) = P(A) * P(B)
+                ❖ 2 Coin Flips: P(heads, tails) = P(heads) * P(tails) = 0.5 * 0.5 = 0.25
+                ❖ P(B | A) = P(B) [A doesn’t change the probability of B]
+            ❖ If events are dependent:   P(A, B) = P(B|A) * P(A)
+                ❖ Marbles: P(red, blue) = P(blue | red) * P(red) = 5/49 * 10/50 = 0.0204
+
+    Markov Chain (in our code will be represented as a Dictionary as the Data Structure)
+
+        ❖ Model of stochastic environment: Markov Chain <S, T>
+            ❖ States S = {s}
+            ❖ State Transition Function T(st, st+1) =  P(st+1|st)
+                ❖ Informs us how likely one state is to follow another
+                ❖ Assume that we already know this (a priori)
+
+        ❖ Markov property: the probability of the future depends only on the present and not the past
+            ❖ Current state st is a sufficient statistic for summarizing all of history❖P(st+1|st) = P(st+1|st, st-1, st-2, ..., s0)
+            ❖ In the real-world, this assumption doesn’t always hold, but it still gives us interesting results
+
+        ❖ Using Markov Chains, we can answer questions like:
+            ❖ What is the likely next state to occur?
+            ❖ What is the probability of a sequence of states?
+            ❖ Given two or more chains, which one most likely produced a given sequence of states?

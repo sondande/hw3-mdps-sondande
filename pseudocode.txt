@@ -277,6 +277,55 @@ Applying Offline Planning:
                     - What is our recursive case?
                         -
 
+From HW3 helping slide:
+
+    Markov Decision Process:
+        ❖ Markov Decision Process   MDP = <S, A, T, R>
+        ❖ States of the environment S = {s}
+        ❖ Actions the agent can choose A = {a}
+        ❖ Stochastic state transition function
+            ❖ T(st, a, st+1) = P(st+1| st, a) = probability state goes from st to st+1 after agent takes action a
+        ❖ Reward function
+            ❖ R(st, a, st+1) = reward for taking action a in state stand reaching state st+1
+
+    Using a List over a set for the data structure:
+        Iterate through each state because it has a unique number 0-2303
+        For loops will iterate over states in order of their unique number
+            - Results in the value iteration algorithm being slightly faster
+
+    Functions as Maps:
+        ❖ What is a function?
+            ❖ Map of inputs to outputs
+        ❖ What is a dictionary or HashMap?
+            ❖ Map of keys to values
+        ❖ Every function can be represented as a Dictionary/HashMap
+            ❖ Keys = inputs
+            ❖ Values = outputs
+
+    State Transition Map:
+        ❖ Inputs for the state transition function T:
+            ❖ Current state st, chosen action a, next state st+1
+            ❖ Map of three inputs to a single output number
+        ❖ Two possible representations
+            ❖ transitions[state][action][next_state] = probability
+            ❖ transitions[(state, action, next_state)] = probability
+            ❖ Only the full combinations of inputs can save the correct output (given in the MDP file)
+
+Pseudocode for Value Iteration:
+    1. Initialize Q table and V values to all zeros
+
+    (Aka step 4. Repeat Steps 2-3 until V values converge * Largest change in V(s) is less than e)
+    While loop (until the largest change in V < e aka the covergence criteria is met)
+        2. Update entire Q table using Bellman equation
+            For each state s in S:
+                For each action a in A:
+                    Calculate Q(s, a) with Bellman
+
+        3. Update all V values using Q table
+            For each state s in S:
+                V(s) = max Q(s, a)
 
 Question:
     - Ask about the reward equations
+    - Do we want to use Lists or Dictionaries for out State transition? And if so, how would we make sure there are
+      unique identifiers for each of the states, so we can use lists.

@@ -1,5 +1,6 @@
 import sys
 
+
 def main():
     # Create Dictionaries
     states = {}
@@ -13,12 +14,12 @@ def main():
     # Open File
     f = open(filename)
 
-    #iterating through file, placing data into the dictionaries
+    # Iterating through the file, placing data into the dictionaries
     line = f.next()
     line = f.next()
 
-    #going through states, splitting into id and label, removing \n and putting in dictionary
-    while(line != '\n'):
+    # Going through states, splitting into id and label, removing \n and putting in dictionary
+    while (line != '\n'):
         data = line.split(",")
         label = data[1]
         label = label[:-1]
@@ -27,8 +28,8 @@ def main():
     line = f.next()
     line = f.next()
 
-    #going through actions, splitting into id and label, removing \n and putting in dictionary
-    while(line != '\n'):
+    # going through actions, splitting into id and label, removing \n and putting in dictionary
+    while (line != '\n'):
         data = line.split(",")
         label = data[1]
         label = label[:-1]
@@ -37,8 +38,8 @@ def main():
     line = f.next()
     line = f.next()
 
-    #going through state transitions, splitting into 4 parts and nesting them into layers in the dictionary
-    while(line != '\n'):
+    # going through state transitions, splitting into 4 parts and nesting them into layers in the dictionary
+    while line != '\n':
         data = line.split(",")
         label = data[3]
         label = label[:-1]
@@ -51,7 +52,7 @@ def main():
     line = f.next()
     line = f.next()
 
-     #going through rewards, splitting into 4 parts and nesting them into layers in the dictionary
+    # going through rewards, splitting into 4 parts and nesting them into layers in the dictionary
     for line in f:
         data = line.split(",")
         label = data[3]
@@ -61,5 +62,6 @@ def main():
         slast = {}
         slast[data[1]] = last
         rewards[data[0]] = slast
+
 
 main()

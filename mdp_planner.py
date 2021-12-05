@@ -15,8 +15,8 @@ def main():
     f = open(filename)
 
     # Iterating through the file, placing data into the dictionaries
-    line = f.next()
-    line = f.next()
+    line = next(f)
+    line = next(f)
 
     # Going through states, splitting into id and label, removing \n and putting in dictionary
     while (line != '\n'):
@@ -24,9 +24,9 @@ def main():
         label = data[1]
         label = label[:-1]
         states[data[0]] = label
-        line = f.next()
-    line = f.next()
-    line = f.next()
+        line = next(f)
+    line = next(f)
+    line = next(f)
 
     # going through actions, splitting into id and label, removing \n and putting in dictionary
     while (line != '\n'):
@@ -34,9 +34,9 @@ def main():
         label = data[1]
         label = label[:-1]
         actions[data[0]] = label
-        line = f.next()
-    line = f.next()
-    line = f.next()
+        line = next(f)
+    line = next(f)
+    line = next(f)
 
     # going through state transitions, splitting into 4 parts and nesting them into layers in the dictionary
     while line != '\n':
@@ -48,9 +48,9 @@ def main():
         slast = {}
         slast[data[1]] = last
         stateTransitions[data[0]] = slast
-        line = f.next()
-    line = f.next()
-    line = f.next()
+        line = next(f)
+    line = next(f)
+    line = next(f)
 
     # going through rewards, splitting into 4 parts and nesting them into layers in the dictionary
     for line in f:

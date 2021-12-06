@@ -1,5 +1,31 @@
 import sys
 
+"""
+Value Iteration 
+"""
+
+
+def value_iteration(mdp):
+    # 1. Initialize Q table and V values to all zeros
+    q_table = []
+    v_table = []
+    for state in range(len(mdp[0])):
+        # the index in the q_table should be equal to the unique identifier of the state
+        q_table.append(0)
+
+        # the index in the v_table should be equal to the unique identifier of the action
+        action_list = []
+        for action in range(len(mdp[1])):
+            action_list.append(0)
+        v_table.append(action_list)
+
+    return
+
+
+"""
+Main function to call program
+"""
+
 
 def main():
     # Create Dictionaries
@@ -7,6 +33,9 @@ def main():
     actions = {}
     stateTransitions = {}
     rewards = {}
+
+    # Creation of Markov Decision Process
+    mdp = [states, actions, stateTransitions, rewards]
 
     # Read file in from arguments
     filename = sys.argv[1]
@@ -19,7 +48,7 @@ def main():
     line = next(f)
 
     # Going through states, splitting into id and label, removing \n and putting in dictionary
-    while (line != '\n'):
+    while line != '\n':
         data = line.split(",")
         label = data[1]
         label = label[:-1]
@@ -29,7 +58,7 @@ def main():
     line = next(f)
 
     # going through actions, splitting into id and label, removing \n and putting in dictionary
-    while (line != '\n'):
+    while line != '\n':
         data = line.split(",")
         label = data[1]
         label = label[:-1]
@@ -62,6 +91,8 @@ def main():
         slast = {}
         slast[data[1]] = last
         rewards[data[0]] = slast
+
+    value_iteration(mdp)
 
 
 main()

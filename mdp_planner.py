@@ -62,6 +62,6 @@ def main():
         slast = {}
         slast[data[1]] = last
         rewards[data[0]] = slast
-
+    
 
 main()

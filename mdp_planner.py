@@ -91,18 +91,25 @@ def main():
     line = next(f)
     line = next(f)
 
+    # TODO fix for the overhead that occures in the dictionary
     # going through state transitions, splitting into 4 parts and nesting them into layers in the dictionary
+    # counter is used to assign each transition a unique identifier to avoid overhead
+    counter = 0
     while line != '\n':
-        data = line.split(",")
+        data = line.split(",") # Removes commas
         print(data)
-        label = data[3]
-        label = label[:-1]
+        label = data[3] # Grabs the last value in the state transitions
+        label = label[:-1] # Eliminates the \n from the integer
         last = {}
-        last[data[2]] = label
+        last[data[2]] = label # Assigns the last value in State Transition as the value for the key of the value before it
         slast = {}
-        slast[data[1]] = last
-        stateTransitions[data[0]] = slast
-        line = next(f)
+        slast[data[1]] = last # Assigns the second value as the key to the dictionary last that stores the 3 and 4 values in State Transitions
+        third_last = {}
+        third_last[data[0]] = slast # Assigns the first value as the key to the dictionary last that stores the 2, 3, and 4 values in State Transitions
+        # Checks to see if the key is in our stateTransition already and goes to the next
+        stateTransitions[counter] = third_last # Assigns the dictionary of the last 3 items in the list to our stateTransitions dictionary with the first value as the key
+        counter += 1 # Increases unique identifier
+        line = next(f) # Goes to the next line in our file
     line = next(f)
     line = next(f)
 

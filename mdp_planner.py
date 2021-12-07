@@ -22,15 +22,21 @@ def value_iteration(mdp):
     # (Aka step 4. Repeat Steps 2-3 until V values converge * Largest change in V(s) is less than e)
     # While loop (until the largest change in V < e aka the covergence criteria is met)
     # TODO add after testing 2-3 and ensuring it is correct
+    # Grab dictionaries
+    states = mdp[0]
+    actions = mdp[1]
+    state_transitions = mdp[2]
+    rewards = mdp[3]
 
     # Step 2: Update entire Q table using Bellman equation
-    for s in mdp[0]:
-        for a in mdp[1]:
+    for s in states: # returns the state uniqueID key
+        for a in actions: # returns the action uniqueID key
             # Calculate Q(s, a) with Bellman
-            value = 0
             # See if the reward from our state to the next state is in our MDP. If not, use the value 0 where we need it
+            value = 0
 
-
+            # TODO first! Find out how to access calues we put in dictionary to be able to calculate Q values
+            # print(mdp[s][a])
             # TODO if we run into an error that a possible transition doesn't have a reward or a reward doens't have a transition, the value is zero. Was specified in the homework assignment listing as
             # The ones not listed in the MDP have values of 0 for probability or reward value. Dependant on which one is missing
 
@@ -83,15 +89,18 @@ def main():
     line = next(f)
     line = next(f)
 
+    # TODO fix for the overhead that occures in the dictionary
     # going through state transitions, splitting into 4 parts and nesting them into layers in the dictionary
+    # counter is used to assign each transition a unique identifier to avoid overhead
+    counter = 0
     while line != '\n':
-        data = line.split(",")
-        label = data[3]
-        label = label[:-1]
+        data = line.split(",") #Removes commas
+        label = data[3] # Grabs the last value in the state transitions
+        label = label[:-1] # Eliminates the \n from the integer
         last = {}
-        last[data[2]] = label
+        last[data[2]] = label # Assigns the last value in State Transition as the value for the key of the value before it
         slast = {}
-        slast[data[1]] = last
+        slast[data[1]] = last # Assigns the second value as the key to the dictionary last that stores the 3 and 4 values in State Transitions
         if(data[0] in stateTransitions):
             newList = stateTransitions[data[0]]
             newList.append(slast)

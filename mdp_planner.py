@@ -5,23 +5,25 @@ Value Iteration
 """
 
 
-def value_iteration(mdp):
+def value_iteration(mdp, gamma_value):
     # 1. Initialize Q table and V values to all zeros
-    q_table = []
-    v_table = []
+    q_table = [] # Stores expected utilities using the bellman equation
+    v_table = [] # Stores possible utilities for each action a state can take
     for state in range(len(mdp[0])):
         # the index in the q_table should be equal to the unique identifier of the state
-        q_table.append(0)
+        v_table.append(0)
 
         # the index in the v_table should be equal to the unique identifier of the action
         action_list = []
-        for action in range(len(mdp[1])):
+        for action in range(len(mdp[1])): # for the number of possible actions for every state
             action_list.append(0)
-        v_table.append(action_list)
+        q_table.append(action_list)
 
+    #### Personal notes of things to think about #####
     # (Aka step 4. Repeat Steps 2-3 until V values converge * Largest change in V(s) is less than e)
     # While loop (until the largest change in V < e aka the covergence criteria is met)
     # TODO add after testing 2-3 and ensuring it is correct
+
     # Grab dictionaries
     states = mdp[0]
     actions = mdp[1]
@@ -29,11 +31,25 @@ def value_iteration(mdp):
     rewards = mdp[3]
 
     # Step 2: Update entire Q table using Bellman equation
-    for s in states: # returns the state uniqueID key
-        for a in actions: # returns the action uniqueID key
+    for s in range(len(states)): # returns the state uniqueID key
+        for a in range(len(actions)): # returns the action uniqueID key
             # Calculate Q(s, a) with Bellman
             # See if the reward from our state to the next state is in our MDP. If not, use the value 0 where we need it
-            value = 0
+
+            # Grab probability if it exists from state transitions
+            probability = state_transitions[str(s)]
+            for transitions in probability:
+                if str(a) in transitions.keys(): # see if the current state and action combination is in the dictionary
+                    next_state = transitions[str(a)]
+                    probability_value = int(next_state.values())
+                    # Just in case to break for loop
+                    break
+
+            # Grab reward if it exists from rewards
+
+
+            # for every state transition for current state and next state in S,
+            q_function = probability_value * ()
 
             # TODO first! Find out how to access calues we put in dictionary to be able to calculate Q values
             # print(mdp[s][a])
@@ -66,6 +82,12 @@ def main():
 
     # Read file in from arguments
     filename = sys.argv[1]
+
+    # Read in gamma value from arguments
+    gamma_value = sys.argv[2]
+
+    # Read in policyFileName from arguments
+    # policyFileName = sys.argv[3]
 
     # Open File
     f = open(filename)
@@ -135,8 +157,8 @@ def main():
             rewards[data[0]] = newList
     
 
-    print(rewards['4'])
-    #value_iteration(mdp)
+    #print(rewards['4'])
+    value_iteration(mdp, gamma_value)
 
 
 main()

@@ -2,6 +2,8 @@ import sys
 
 """
 Value Iteration 
+
+BIG NOTE: because we set all the values for the q and v tables to 0, if the transition or reward is not in the mdp file, the values will stay zero and no need to check and assign it/ calculate it 
 """
 
 
@@ -36,25 +38,45 @@ def value_iteration(mdp, gamma_value):
             # Calculate Q(s, a) with Bellman
             # See if the reward from our state to the next state is in our MDP. If not, use the value 0 where we need it
 
-            # Grab probability if it exists from state transitions
-            probability = state_transitions[str(s)]
-            for transitions in probability:
-                if str(a) in transitions.keys(): # see if the current state and action combination is in the dictionary
-                    next_state = transitions[str(a)]
-                    probability_value = int(next_state.values())
-                    # Just in case to break for loop
-                    break
+            probability = state_transitions.get(str(s), 0) # grabs second layer dictionary if it exists, if not found, assigned probability the integer value 0
+            if probability != 0: # checks if it the integer value 0. If it is, we skip right to finding the reward value
+                for transitions in probability:
+                    probability = transitions.get(str(a), 0) # grabs third layer dictionary if it exists, if not found, assigned probability the integer value 0
+                    if probability != 0:
+                        next_state = transitions[str(a)]
+                        probability = float(next(iter(next_state.values())))
+                        # Just in case to break for loop
+                        break
 
+            # TODO if the probability value is 0, should we just assign the variable now and then go to the next iterationf or efficiency??  didn't want to apply it without your opinion on it
             # Grab reward if it exists from rewards
+            reward = rewards.get(str(s), 0) # grabs second layer dictionary if it exists, if not found, assigned probability the integer value 0
+            if reward != 0: # checks if it the integer value 0. If it is, we skip right to calculating the bellman equation
+                for r in reward:
+                    reward = r.get(str(a), 0) # grabs third layer dictionary if it exists, if not found, assigned probability the integer value 0
+                    if reward != 0:
+                        next_state = r[str(a)]
+                        reward = float(next(iter(next_state.values())))
+                        # Just in case to break for loop
+                        break
 
+            # TODO should the q value for each one be a float or an int. I think it should be a float for percision and because we are mainly working with floats
 
-            # for every state transition for current state and next state in S,
-            q_function = probability_value * ()
+            # Created to prevent out of index error when working with the v_table
+            if s + 1 == len(states):
+                v_state_value = 1 # as it wouldn't cause any change like not moving
+            else:
+                v_state_value = v_table[s+1] # takes next value in the v_table
 
-            # TODO first! Find out how to access calues we put in dictionary to be able to calculate Q values
-            # print(mdp[s][a])
-            # TODO if we run into an error that a possible transition doesn't have a reward or a reward doens't have a transition, the value is zero. Was specified in the homework assignment listing as
-            # The ones not listed in the MDP have values of 0 for probability or reward value. Dependant on which one is missing
+            # Bellman equation
+            q_function = probability * (reward + gamma_value * v_state_value)
+
+            # Update Q table
+            q_table[s][a] = q_function
+
+        # Update V table
+        v_table[s] = max(q_table[s])
+        print("no error")
 
 
     return
@@ -84,7 +106,7 @@ def main():
     filename = sys.argv[1]
 
     # Read in gamma value from arguments
-    gamma_value = sys.argv[2]
+    gamma_value = float(sys.argv[2])
 
     # Read in policyFileName from arguments
     # policyFileName = sys.argv[3]

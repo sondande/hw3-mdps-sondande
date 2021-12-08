@@ -329,3 +329,8 @@ Question:
     - Ask about the reward equations
     - Do we want to use Lists or Dictionaries for out State transition? And if so, how would we make sure there are
       unique identifiers for each of the states, so we can use lists.
+
+
+#### Personal notes of things to think about #####
+# TODO add step 4 for updating all the values until we reach convergence. First step i to ensure that steps 2-3 are working and we are getting the values we want before
+#  implementing the while loop

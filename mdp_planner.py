@@ -8,7 +8,7 @@ Saving Policy from Value Iteration to a File
 
 def save_to_file(v_table, filename):
     # clearing the file
-    print(filename)
+    #print(filename)
     with open(filename, 'r+') as f:
         f.truncate(4)
     file = open(filename, 'w')  # opening file to write into
@@ -106,12 +106,13 @@ def value_iteration(mdp, gamma_value, policyFileName):
             if(isinstance(v_table[s],int)):
                 old_v_value = 0
             else:
-                old_v_value = v_table[s][1]
+                old_v_value = v_table[s][0]
+            #print(abs(new_v_value - old_v_value))
             if max_change < abs(new_v_value - old_v_value):
                 max_change = abs(new_v_value - old_v_value)
             v_table[s] = (max(q_table[s], key=itemgetter(0))[0], max(q_table[s], key=itemgetter(0))[1])  # put the state at which the maximum q value is found into v_table[s]
-            # print("no error")
-
+            #print(v_table)
+        print(max_change)
     save_to_file(v_table, policyFileName)  # call function to save the optimal actions at each state
     return
 

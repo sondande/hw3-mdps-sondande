@@ -46,6 +46,11 @@ def value_iteration(mdp):
 
 """
 Main function to call program
+
+Values are stored in the stateTransition and Rewards dictionary in the format of the key being the currentState, and every element in the list are possible state transitions given or rewards for that current state
+
+StateTransition: State(key), [Action, Next_State, Probability] (list of state transition options for State)
+Reward: State(key), [Action, Next_State, Reward] (list of reward options for State)
 """
 
 
@@ -89,10 +94,8 @@ def main():
     line = next(f)
     line = next(f)
 
-    # TODO fix for the overhead that occures in the dictionary
     # going through state transitions, splitting into 4 parts and nesting them into layers in the dictionary
-    # counter is used to assign each transition a unique identifier to avoid overhead
-    counter = 0
+
     while line != '\n':
         data = line.split(",") #Removes commas
         label = data[3] # Grabs the last value in the state transitions
@@ -101,11 +104,11 @@ def main():
         last[data[2]] = label # Assigns the last value in State Transition as the value for the key of the value before it
         slast = {}
         slast[data[1]] = last # Assigns the second value as the key to the dictionary last that stores the 3 and 4 values in State Transitions
-        if(data[0] in stateTransitions):
+        if(data[0] in stateTransitions): # We see if the leading current state in the state transition is in our dictionary. If so, add new reward to list
             newList = stateTransitions[data[0]]
             newList.append(slast)
             stateTransitions[data[0]] = newList
-        else:
+        else: # if not, append it to our stateTransition dictionary
             newList = []
             newList.append(slast)
             stateTransitions[data[0]] = newList
@@ -114,7 +117,6 @@ def main():
     line = next(f)
 
     # going through rewards, splitting into 4 parts and nesting them into layers in the dictionary
-    # TODO when using a debugger, I found that the size of the dictionary for rewards was only 9 instead of the expected 18. This also happens in state transitions
     for line in f:
         data = line.split(",")
         label = data[3]

@@ -1,4 +1,21 @@
 import sys
+from operator import itemgetter
+
+
+"""
+Saving Policy from Value Iteration to a File
+"""
+
+def save_to_file(v_table, filename):
+    #clearing the file
+    with open(filename, 'r+') as f:
+        f.truncate(4)
+    file = open(filename, 'w') #opening file to write into
+    for i in range(len(v_table)): #iterating through each state in the v_table
+        curr = str(i) + "," + str(v_table[i][1])
+        file.write(curr) #writing line to the file
+        file.write("\n")
+    file.close()
 
 """
 Value Iteration 
@@ -61,7 +78,6 @@ def value_iteration(mdp, gamma_value):
                         break
 
             # TODO should the q value for each one be a float or an int. I think it should be a float for percision and because we are mainly working with floats
-
             # Created to prevent out of index error when working with the v_table
             if s + 1 == len(states):
                 v_state_value = 1 # as it wouldn't cause any change like not moving
@@ -72,13 +88,17 @@ def value_iteration(mdp, gamma_value):
             q_function = probability * (reward + gamma_value * v_state_value)
 
             # Update Q table
-            q_table[s][a] = q_function
+            toup = (q_function, a)
+            q_table[s][a] = toup
+            #q_table[s][a] = q_function
 
         # Update V table
-        v_table[s] = max(q_table[s])
-        print("no error")
+        print(q_table[0])
+        v_table[s] = (max(q_table[s]), max(q_table[s], key = itemgetter(0))[1])
+        #v_table[s] = max(q_table[s])
+        #print("no error")
 
-
+    save_to_file(v_table, "policyfile.txt")
     return
 
 

@@ -12,7 +12,7 @@ def save_to_file(v_table, filename):
         f.truncate(4)
     file = open(filename, 'w') #opening file to write into
     for i in range(len(v_table)): #iterating through each state in the v_table
-        curr = str(i) + "," + str(v_table[i][1])
+        curr = str(i) + "," + str(v_table[i][1]) #putting state, action into correct format
         file.write(curr) #writing line to the file
         file.write("\n")
     file.close()
@@ -88,17 +88,17 @@ def value_iteration(mdp, gamma_value):
             q_function = probability * (reward + gamma_value * v_state_value)
 
             # Update Q table
-            toup = (q_function, a)
-            q_table[s][a] = toup
+            toup = (q_function, a) #add what action leads to what q level in a tuple
+            q_table[s][a] = toup #put tuple into the q_table at state and action
             #q_table[s][a] = q_function
 
         # Update V table
         print(q_table[0])
-        v_table[s] = (max(q_table[s]), max(q_table[s], key = itemgetter(0))[1])
+        v_table[s] = (max(q_table[s]), max(q_table[s], key = itemgetter(0))[1]) #put the state at which the maximum q value is found into v_table[s]
         #v_table[s] = max(q_table[s])
         #print("no error")
 
-    save_to_file(v_table, "policyfile.txt")
+    save_to_file(v_table, "policyfile.txt") #call function to save the optimal actions at each state
     return
 
 

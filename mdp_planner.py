@@ -8,6 +8,7 @@ Saving Policy from Value Iteration to a File
 
 def save_to_file(v_table, filename):
     # clearing the file
+    print(filename)
     with open(filename, 'r+') as f:
         f.truncate(4)
     file = open(filename, 'w')  # opening file to write into
@@ -50,7 +51,7 @@ def value_iteration(mdp, gamma_value, policyFileName):
     rewards = mdp[3]
 
     max_change = 1
-    while max_change < gamma_value:
+    while max_change > gamma_value:
         max_change = 0
         # Step 2: Update entire Q table using Bellman equation
         for s in range(len(states)):  # returns the state uniqueID key
@@ -86,8 +87,10 @@ def value_iteration(mdp, gamma_value, policyFileName):
                 if s + 1 == len(states):
                     v_state_value = 1  # as it wouldn't cause any change like not moving
                 else:
-                    v_state_value = v_table[s + 1]  # takes next value in the v_table
-
+                    if not(isinstance(v_table[s + 1], int)):
+                        v_state_value = v_table[s + 1][0]  # takes next value in the v_table
+                    else:
+                        v_state_value = v_table[s + 1]
                 # Bellman equation to solve for the Q value for the currentState s and the action a
                 q_function = probability * (reward + gamma_value * v_state_value)
 
@@ -99,14 +102,17 @@ def value_iteration(mdp, gamma_value, policyFileName):
         for s in range(len(states)):
             # Test case to show we are grabbing the max value for state s in Q_table # q_table[0][1] = (5.0, 1)
             # finds the max of tuples and then allows us to store the second value in the tuple
-            new_v_value = (max(q_table[s], key=itemgetter(0))[0], max(q_table[s], key=itemgetter(0))[1])
-
-            if max_change < abs(new_v_value - v_table[s]):
-                max_change = abs(new_v_value - v_table[s])
-            v_table[s] = new_v_value  # put the state at which the maximum q value is found into v_table[s]
+            new_v_value = max(q_table[s], key=itemgetter(0))[0]
+            if(isinstance(v_table[s],int)):
+                old_v_value = 0
+            else:
+                old_v_value = v_table[s][1]
+            if max_change < abs(new_v_value - old_v_value):
+                max_change = abs(new_v_value - old_v_value)
+            v_table[s] = (max(q_table[s], key=itemgetter(0))[0], max(q_table[s], key=itemgetter(0))[1])  # put the state at which the maximum q value is found into v_table[s]
             # print("no error")
 
-        save_to_file(v_table, policyFileName)  # call function to save the optimal actions at each state
+    save_to_file(v_table, policyFileName)  # call function to save the optimal actions at each state
     return
 
 

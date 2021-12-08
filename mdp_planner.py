@@ -39,6 +39,9 @@ def value_iteration(mdp, gamma_value):
         q_table.append(action_list)
 
     #### Personal notes of things to think about #####
+    # TODO add step 4 for updating all the values until we reach convergence. First step i to ensure that steps 2-3 are working and we are getting the values we want before
+    #  implementing the while loop
+
     # (Aka step 4. Repeat Steps 2-3 until V values converge * Largest change in V(s) is less than e)
     # While loop (until the largest change in V < e aka the covergence criteria is met)
     # TODO add after testing 2-3 and ensuring it is correct
@@ -84,19 +87,21 @@ def value_iteration(mdp, gamma_value):
             else:
                 v_state_value = v_table[s+1] # takes next value in the v_table
 
-            # Bellman equation
+            # Bellman equation to solve for the Q value for the currentState s and the action a
             q_function = probability * (reward + gamma_value * v_state_value)
 
-            # Update Q table
+            # Update Q table # TODO From what I remember correctly, if we store the Q value in the Q_table at index s and a, we know the state in actions based on the unique identifier for both
             toup = (q_function, a) #add what action leads to what q level in a tuple
             q_table[s][a] = toup #put tuple into the q_table at state and action
             #q_table[s][a] = q_function
 
         # Update V table
         print(q_table[0])
-        v_table[s] = (max(q_table[s]), max(q_table[s], key = itemgetter(0))[1]) #put the state at which the maximum q value is found into v_table[s]
+        q_table[0][1] = (5.0, 1)
+        # finds the max of tuples and then allows us to store the second value in the tuple
+        v_table[s] = (max(q_table[s], key = itemgetter(0))[0], max(q_table[s], key = itemgetter(0))[1]) #put the state at which the maximum q value is found into v_table[s]
         #v_table[s] = max(q_table[s])
-        #print("no error")
+        print("no error")
 
     save_to_file(v_table, "policyfile.txt") #call function to save the optimal actions at each state
     return

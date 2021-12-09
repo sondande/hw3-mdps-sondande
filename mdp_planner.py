@@ -8,7 +8,6 @@ Saving Policy from Value Iteration to a File
 
 def save_to_file(v_table, filename):
     # clearing the file
-    #print(filename)
     with open(filename, 'r+') as f:
         f.truncate(4)
     file = open(filename, 'w')  # opening file to write into
@@ -31,9 +30,11 @@ def value_iteration(mdp, gamma_value, policyFileName):
     # 1. Initialize Q table and V values to all zeros
     q_table = []  # Stores expected utilities using the bellman equation
     v_table = []  # Stores possible utilities for each action a state can take
+    policy = []
     for state in range(len(mdp[0])):
         # the index in the q_table should be equal to the unique identifier of the state
         v_table.append(0.0)
+        policy.append(0)
 
         # the index in the v_table should be equal to the unique identifier of the action
         action_list = []
@@ -49,54 +50,22 @@ def value_iteration(mdp, gamma_value, policyFileName):
     actions = mdp[1]
     state_transitions = mdp[2]
     rewards = mdp[3]
-
     max_change = 1
     while max_change > gamma_value:
-        #max_change = 0
+        max_change = 0
         # Step 2: Update entire Q table using Bellman equation
         for s in range(len(states)):  # returns the state uniqueID key
             for a in range(len(actions)):  # returns the action uniqueID key
-                # Calculate Q(s, a) with Bellman
-                # See if the reward from our state to the next state is in our MDP. If not, use the value 0 where we need it
-
-                probability = state_transitions.get(str(s),
-                                                    0)  # grabs second layer dictionary if it exists, if not found, assigned probability the integer value 0
-                if probability != 0:  # checks if it the integer value 0. If it is, we skip right to finding the reward value
-                    for transitions in probability:
-                        probability = transitions.get(str(a),
-                                                      0)  # grabs third layer dictionary if it exists, if not found, assigned probability the integer value 0
-                        if probability != 0:
-                            next_state = transitions[str(a)]
-                            probability = float(next(iter(next_state.values())))
-                            # Just in case to break for loop
-                            break
-
-                # Grab reward if it exists from rewards
-                reward = rewards.get(str(s), 0)  # grabs second layer dictionary if it exists, if not found, assigned probability the integer value 0
-                if reward != 0:  # checks if it the integer value 0. If it is, we skip right to calculating the bellman equation
-                    for r in reward:
-                        reward = r.get(str(a),
-                                       0)  # grabs third layer dictionary if it exists, if not found, assigned probability the integer value 0
-                        if reward != 0:
-                            next_state = r[str(a)]
-                            reward = float(next(iter(next_state.values())))
-                            # Just in case to break for loop
-                            break
-
-                # Created to prevent out of index error when working with the v_table
-                if s + 1 == len(states):
-                    v_state_value = 1  # as it wouldn't cause any change like not moving
-                else:
-                    #if not isinstance(v_table[s + 1], int):
-                    if type(v_table[s+1]) is not float:
-                        print(type(v_table[s+1]))
-                        print(v_table[s + 1])
-                        v_state_value = v_table[s + 1][0]  # takes next value in the v_table
+                q_function = 0
+                for next_state in state_transitions[str(s)][str(a)]:
+                    probability = state_transitions[str(s)][str(a)][next_state]
+                    if(next_state in rewards[str(s)][str(a)]):
+                        reward = rewards[str(s)][str(a)][next_state]
                     else:
-                        v_state_value = v_table[s + 1]
-                # Bellman equation to solve for the Q value for the currentState s and the action a
-                q_function = probability * (reward + gamma_value * v_state_value)
-
+                        reward = 0
+                    v_state_value = v_table[int(next_state)]
+                    
+                    q_function += (probability * (reward + gamma_value * v_state_value))
                 # Update Q table
                 toup = (q_function, a)  # add what action leads to what q level in a tuple
                 q_table[s][a] = toup  # put tuple into the q_table at state and action
@@ -110,25 +79,20 @@ def value_iteration(mdp, gamma_value, policyFileName):
             new_v_value = max(q_table[s], key=itemgetter(0))[0]
 
             # We check to see if the value at index s is an integer. If so, we assign it as 0, if not, we take the first value in our tuple which is the v value for that prior state
-            if(isinstance(v_table[s], float)):
-                print("here")
-                old_v_value = 0.0
-            else:
-                old_v_value = v_table[s][0]
-            #print(abs(new_v_value - old_v_value))
+            old_v_value = v_table[s]
 
             # we calculate to see if there was a larger max change. If so, we edit our max_change variable to be used for our next iteration of the while loop
             # TODO changed from < to > because we want to see if the change in max value is less than the gamma value. As a result, we want to take the prior value and the new calculated and substratct them. If our change was greater
             # from before, we just switch the values. This should go until our max value is less than 0.1 since that is the gamma value.
-            if max_change > abs(new_v_value - old_v_value):
+            if max_change < abs(new_v_value - old_v_value):
 
                 max_change = abs(new_v_value - old_v_value)
 
             #This is where we store
-            v_table[s] = (max(q_table[s], key=itemgetter(0))[0], max(q_table[s], key=itemgetter(0))[1])  # put the state at which the maximum q value is found into v_table[s]
-            #print(v_table)
+            v_table[s] = new_v_value 
+            policy[s] = (max(q_table[s], key=itemgetter(0))[0], max(q_table[s], key=itemgetter(0))[1])  # put the state at which the maximum q value is found into v_table[s]
 
-    save_to_file(v_table, policyFileName)  # call function to save the optimal actions at each state
+    save_to_file(policy, policyFileName)  # call function to save the optimal actions at each state
     return
 
 
@@ -191,45 +155,44 @@ def main():
 
     # going through state transitions, splitting into 4 parts and nesting them into layers in the dictionary
 
+    for state in states:
+        stateTransitions[state] = {}
+
+        for action in actions:
+            stateTransitions[state][action] = {}
+
     while line != '\n':
+        line = line.strip()
         data = line.split(",")  # Removes commas
-        label = data[3]  # Grabs the last value in the state transitions
-        label = label[:-1]  # Eliminates the \n from the integer
-        last = {}
-        last[data[2]] = label  # Assigns the last value in State Transition as the value for the key of the value before it
-        slast = {}
-        slast[data[1]] = last  # Assigns the second value as the key to the dictionary last that stores the 3 and 4 values in State Transitions
-        if (data[0] in stateTransitions):  # We see if the leading current state in the state transition is in our dictionary. If so, add new reward to list
-            newList = stateTransitions[data[0]]
-            newList.append(slast)
-            stateTransitions[data[0]] = newList
-        else:  # if not, append it to our stateTransition dictionary
-            newList = []
-            newList.append(slast)
-            stateTransitions[data[0]] = newList
+
+        state = data[0]
+        action = data[1]
+        next_state = data[2]
+        label = float(data[3])  # Grabs the last value in the state transitions
+
+        stateTransitions[state][action][next_state] = label
         line = next(f)
     line = next(f)
     line = next(f)
 
+
+    for state in states:
+        rewards[state] = {}
+
+        for action in actions:
+            rewards[state][action] = {}
+
     # going through rewards, splitting into 4 parts and nesting them into layers in the dictionary
     for line in f:
-        data = line.split(",")
-        label = data[3]
-        label = label[:-1]
-        last = {}
-        last[data[2]] = label
-        slast = {}
-        slast[data[1]] = last
-        if (data[0] in rewards):
-            newList = rewards[data[0]]
-            newList.append(slast)
-            rewards[data[0]] = newList
-        else:
-            newList = []
-            newList.append(slast)
-            rewards[data[0]] = newList
+        line = line.strip()
+        data = line.split(",")  # Removes commas
 
-    # print(rewards['4'])
+        state = data[0]
+        action = data[1]
+        next_state = data[2]
+        label = float(data[3])  # Grabs the last value in the state transitions
+        rewards[state][action][next_state] = label
+
     value_iteration(mdp, gamma_value, policyFileName)
 
 

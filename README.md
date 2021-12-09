@@ -5,5 +5,5 @@ HW3: Robotic Wildfire Suppression (Markov Decision Processes)
 1. A paragraph discussing how 𝛾 impacted the average utility earned by the agent – do you see any trends? What do you think these trends imply, and why did they occur?
 2. A couple paragraphs documenting how you designed and implemented the MDP in your program? What design options did you consider, and how did you decide on this implementation?
 3. A short paragraph describing your experience during the assignment (what did you enjoy, what was difficult, etc.)
-4. An estimation of how much time you spent on the assignment, and
-5. An affirmation that you adhered to the honor code
+4. Probably about 20 Hours.
+5. We have affirmed to the Honor Code on this Assignment.

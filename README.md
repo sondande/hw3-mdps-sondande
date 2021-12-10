@@ -27,4 +27,4 @@ HW3: Robotic Wildfire Suppression (Markov Decision Processes)
    Accordingly so that I could utilize and store the information easily.
 
 4. Probably about 20 Hours.
-5. We have affirmed to the Honor Code on this Assignment. - Sagana Ondande & Oliver Rippen
+5. We have affirmed to the Honor Code on this Assignment. - Sagana Ondande & Oliver Ripps

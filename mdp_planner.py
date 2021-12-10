@@ -1,5 +1,12 @@
 import sys
 from operator import itemgetter
+"""
+CSCI 364: Professor Adam Eck
+HW3 MDPs
+12/09/2021
+By: Sagana Ondande & Oliver Rippen
+"""
+
 
 """
 Saving Policy from Value Iteration to a File
@@ -59,7 +66,7 @@ def value_iteration(mdp, gamma_value, policyFileName):
                 q_function = 0
                 for next_state in state_transitions[str(s)][str(a)]:
                     probability = state_transitions[str(s)][str(a)][next_state]
-                    if(next_state in rewards[str(s)][str(a)]):
+                    if next_state in rewards[str(s)][str(a)]:
                         reward = rewards[str(s)][str(a)][next_state]
                     else:
                         reward = 0
@@ -82,7 +89,6 @@ def value_iteration(mdp, gamma_value, policyFileName):
             old_v_value = v_table[s]
 
             # we calculate to see if there was a larger max change. If so, we edit our max_change variable to be used for our next iteration of the while loop
-            # TODO changed from < to > because we want to see if the change in max value is less than the gamma value. As a result, we want to take the prior value and the new calculated and substratct them. If our change was greater
             # from before, we just switch the values. This should go until our max value is less than 0.1 since that is the gamma value.
             if max_change < abs(new_v_value - old_v_value):
 

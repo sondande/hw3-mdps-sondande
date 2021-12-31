@@ -19,7 +19,7 @@ def save_to_file(v_table, filename):
         f.truncate(4)
     file = open(filename, 'w')  # opening file to write into
     for i in range(len(v_table)):  # iterating through each state in the v_table
-        curr = str(i) + "," + str(v_table[i][1])  # putting state, action into correct format # TODO Changed becasue the value is no longer a tuple and just an assigned value
+        curr = str(i) + "," + str(v_table[i][1])  # putting state, action into correct format
         file.write(curr)  # writing line to the file
         file.write("\n")
     file.close()
